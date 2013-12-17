@@ -20,9 +20,9 @@ public class PrintTable
     {
         this.connection = connection;
         this.queryForPersons = "SELECT * FROM persons";
-        this.queryForMarriedAndDesendets = "SELECT * FROM married_and_descendants";
+        this.queryForMarriedAndDesendets = "SELECT * FROM relations";
         this.queryForCars = "SELECT * FROM cars";
-        this.queryForCarsOwned = "SELECT * from cars_owned_by_people";
+        this.queryForCarsOwned = "SELECT * from cars_persons";
     }
 
     public void printSchema(String table) throws SQLException
@@ -35,7 +35,7 @@ public class PrintTable
                 resultSet = statement.executeQuery(this.queryForPersons);
                 printPersons(resultSet);
                 break;
-            case "married_and_descendants":
+            case "relations":
                 resultSet = statement.executeQuery(this.queryForMarriedAndDesendets);
                 printMarried(resultSet);
                 break;
@@ -43,7 +43,7 @@ public class PrintTable
                 resultSet = statement.executeQuery(this.queryForCars);
                 printCars(resultSet);
                 break;
-            case "cars_owned_by_people":
+            case "cars_persons":
                 resultSet = statement.executeQuery(this.queryForCarsOwned);
                 printCarsOwned(resultSet);
                 break;

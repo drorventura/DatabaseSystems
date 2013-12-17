@@ -22,7 +22,6 @@ public class Main
     public static Connection connectToDatabase()
     {
         Connection conn = null;
-        //STEP 2: Register JDBC driver
         try
         {
             Class.forName(JDBC_DRIVER);
@@ -46,9 +45,9 @@ public class Main
                 LoadFiles.loadFileToPersons(connection, filePath);
                 System.out.println("Records has been added");
                 break;
-            case "married_and_descendants":
+            case "relations":
                 System.out.println("Loading file MarriedAndDescendants to table");
-                LoadFiles.loadFileToMarriedAndDescendants(connection, filePath);
+                LoadFiles.loadFileToRelations(connection, filePath);
                 System.out.println("Records has been added");
                 break;
             case "cars":
@@ -56,9 +55,9 @@ public class Main
                 LoadFiles.loadFileToCars(connection, filePath);
                 System.out.println("Records has been added");
                 break;
-            case "cars_owned_by_people":
+            case "cars_persons":
                 System.out.println("Loading file CarsOwnedByPeople to table");
-                LoadFiles.loadFileToCarsOwnedByPeople(connection, filePath);
+                LoadFiles.loadFileToCarsPersons(connection, filePath);
                 System.out.println("Records has been added");
                 break;
             default:
@@ -82,7 +81,9 @@ public class Main
             Scanner scanner = new Scanner(System.in).useDelimiter(";");
             String[] parsedCommad = scanner.next().split("\\s");
 
-            String action = parsedCommad[0];
+            String action = "";
+            if (parsedCommad.length > 0)
+                action = parsedCommad[0];
 
             try
             {
@@ -128,9 +129,13 @@ public class Main
                         throw new IOException("Invalid command");
                 }
             }
-            catch (IOException | SQLException e)
+            catch (IOException e)
             {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+            catch (SQLException e)
+            {
+                System.out.println(e.getMessage());
             }
         }
     }

@@ -27,7 +27,7 @@ public class LoadFiles
         }
         catch (SQLException | FileNotFoundException e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         int j = 0;
@@ -44,7 +44,7 @@ public class LoadFiles
                 if (record[0].equals("?"))
                     statement.setNull(1, Types.INTEGER); // id is a primary key so that will throw an exception as expected
                 else
-                    statement.setInt(1,Integer.parseInt(record[0])); // id
+                    statement.setInt(1, Integer.parseInt(record[0])); // id
                 if(record[1].equals("?"))
                     statement.setNull(2, Types.INTEGER);
                 else
@@ -86,7 +86,7 @@ public class LoadFiles
             }
             catch (SQLException e)
             {
-                e.printStackTrace();
+                System.out.println("person " + record[0] + " was not added because:\n" + e.getMessage());
             }
         }
     }
@@ -129,7 +129,7 @@ public class LoadFiles
         }
     }
 
-    public static void loadFileToMarriedAndDescendants(Connection connection, String filePath)
+    public static void loadFileToRelations(Connection connection, String filePath)
     {
         ReadCVS cvsReader = new ReadCVS();
         String[] record;
@@ -139,7 +139,7 @@ public class LoadFiles
         {
             cvsReader.readFile(filePath);
 
-            String insertTableRequest = "INSERT INTO married_and_descendants" +
+            String insertTableRequest = "INSERT INTO relations" +
                                         "(id_person, id_relative, relationship)" +
                                         "VALUES (?, ?, ?);";
 
@@ -161,12 +161,12 @@ public class LoadFiles
             }
             catch (SQLException e)
             {
-                e.printStackTrace();
+                System.out.println("relation was not added because:\n" + e.getMessage());
             }
         }
     }
 
-    public static void loadFileToCarsOwnedByPeople(Connection connection, String filePath)
+    public static void loadFileToCarsPersons(Connection connection, String filePath)
     {
         ReadCVS cvsReader = new ReadCVS();
         String[] record;
@@ -175,7 +175,7 @@ public class LoadFiles
         try
         {
             cvsReader.readFile(filePath);
-            String insertTableRequest = "INSERT INTO cars_owned_by_people" +
+            String insertTableRequest = "INSERT INTO cars_persons" +
                                         "(person_id, car_id, color, date_purchased)" +
                                         "VALUES (?, ?, ?, ?);";
 
@@ -183,7 +183,7 @@ public class LoadFiles
         }
         catch(SQLException | FileNotFoundException e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         while ((record = cvsReader.getNextRecord()) != null)
@@ -198,15 +198,13 @@ public class LoadFiles
                 statement.setString(3, record[2]); // color
 
                 String[] date = record[3].split("/");
-                statement.setDate(4, new Date(Integer.parseInt(date[2]),
-                                              Integer.parseInt(date[1]),
-                                              Integer.parseInt(date[0]))); // date_purchased
+                statement.setDate(4, Date.valueOf(date[2] + "-" + date[1] + "-" + date[0])); // date_purchased
 
                 statement.executeUpdate();
             }
             catch (SQLException e)
             {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
 

@@ -41,7 +41,10 @@ public class LoadFiles
 
             try
             {
-                statement.setInt(1,Integer.parseInt(record[0])); // id
+                if (record[0].equals("?"))
+                    statement.setNull(1, Types.INTEGER); // id is a primary key so that will throw an exception as expected
+                else
+                    statement.setInt(1,Integer.parseInt(record[0])); // id
                 if(record[1].equals("?"))
                     statement.setNull(2, Types.INTEGER);
                 else

@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -77,48 +78,111 @@ public class Schema
         return createTableCarsOwnedByPeople;
     }
 
-    public void personsTriggers()
+    public String personsTrigger()
     {
-        String triggerOnWorkerClass =   "CREATE TRIGGER workclass" +
-                                        "BEFORE INSERT ON persons" +
-                                        "FOR EACH ROW" +
-                                        "BEGIN" +
-                                        "IF NEW.workclass NOT IN" +
+
+        String personsInsertTrigger =   "CREATE TRIGGER persons_insert " +
+                                        "BEFORE INSERT ON persons " +
+                                        "FOR EACH ROW " +
+                                        "BEGIN " +
+                                        "IF NEW.workclass NOT IN " +
                                         "('Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov'," +
-                                        "'Federal-gov', 'State-gov', 'Without-pay', 'Never-worked')" +
-                                        "THEN CALL invalid_workclass_was_inserted" +
-                                        "END IF;";
+                                        "'Local-gov', 'State-gov', 'Without-pay', 'Never-worked') " +
+                                        "THEN CALL invalid_workclass_was_inserted;" +
+                                        "END IF;" +
+                                        "IF NEW.education NOT IN " +
+                                        "('Bachelors', 'Some-college', '11th'," +
+                                        "'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th'," +
+                                        "'7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate'," +
+                                        "'5th-6th', 'Preschool') " +
+                                        "THEN CALL invalid_education_was_inserted;" +
+                                        "END IF;" +
+                                        "IF NEW.marital_status NOT IN " +
+                                        "('Married-civ-spouse', 'Divorced', 'Never-married'," +
+                                        "'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse') " +
+                                        "THEN CALL invalid_marital_status_was_inserted;" +
+                                        "END IF;" +
+                                        "IF NEW.race NOT IN ('White', 'Asian-Pac-Islander'," +
+                                        "'Amer-Indian-Eskimo', 'Other', 'Black') " +
+                                        "THEN CALL invalid_race_was_inserted;" +
+                                        "END IF;" +
+                                        "IF NEW.native_country NOT IN " +
+                                        "('United-States', 'Cambodia', 'England', 'Puerto-Rico'," +
+                                        "'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan'," +
+                                        "'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines'," +
+                                        "'Ireland', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal'," +
+                                        "'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti'," +
+                                        "'Columbia', 'Hungary', 'Guatemala'," +
+                                        "'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador'," +
+                                        "'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands')" +
+                                        "THEN CALL invalid_sex_was_inserted;" +
+                                        "END IF;" +
+                                        "END;";
 
-        String triggerOnRace =  "CREATE TRIGGER race" +
-                                "BEFORE INSERT ON persons" +
-                                "FOR EACH ROW" +
-                                "BEGIN" +
-                                "IF NEW.race NOT IN ('White', 'Asian-Pac-Islander'," +
-                                "'Amer-Indian-Eskimo', 'Other', 'Black')" +
-                                "THEN CALL invalid_race_was_inserted" +
-                                "END IF;";
-
-        String triggerOnEducation = "CREATE TRIGGER education" +
-                                    "BEFORE INSERT ON persons" +
-                                    "FOR EACH ROW" +
-                                    "BEGIN" +
-                                    "IF NEW.education NOT IN ('Bachelors', 'Some-college', '11th'," +
-                                    "'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-acdm', '9th'," +
-                                    "'7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate'," +
-                                    "'5th-6th', 'Preschool')" +
-                                    "THEN CALL invalid_race_was_inserted" +
-                                    "END IF;";
-
-
-
+        return personsInsertTrigger;
     }
 
+    public String marriedAndDescendantsTrigger()
+    {
+
+        String marriedAndDescendantsInsertTrigger = "CREATE TRIGGER persons_insert " +
+                                                    "BEFORE INSERT ON persons " +
+                                                    "FOR EACH ROW " +
+                                                    "BEGIN " +
+                                                    "IF NEW.relationship NOT IN " +
+                                                    "('wife', 'husband', 'child') " +
+                                                    "THEN CALL invalid_relationship_was_inserted;" +
+                                                    "END IF;" +
+                                                    "DECLARE parent_age, child_age, man_salary, wife_salary INT" +
+                                                    "IF NEW.relationship = 'child' THEN " +
+                                                    "   SET parent_age = (SELECT age FROM persons" +
+                                                    "                     WHERE id = NEW.id_person);" +
+                                                    "   SET child_age = (SELECT age FROM persons" +
+                                                    "                    WHERE id = NEW.id_relative);" +
+                                                    "   IF parent_age <= child_age " +
+                                                    "   THEN CALL child_is_older_then_parent;" +
+                                                    "   END IF;" +
+                                                    "END IF;" +
+                                                    "IF NEW.relationship = 'wife' THEN" +
+                                                    "   SET man_salary = (SELECT capital_gain" +
+                                                    "                     FROM persons" +
+                                                    "                     WHERE id = NEW.id_person);" +
+                                                    "   SET wife_salary = (SELECT capital_gain" +
+                                                    "                      FROM persons" +
+                                                    "                      WHERE id = NEW.id_relative);" +
+                                                    "   IF man_salary < wife_salary " +
+                                                    "   THEN CALL a_man_cannot_earn_more_than_his_wife;" +
+                                                    "   END IF;" +
+                                                    "END IF;" +
+                                                    "IF NEW.relationship = 'husband' THEN" +
+                                                    "   SET wife_salary = (SELECT capital_gain" +
+                                                    "                     FROM persons" +
+                                                    "                     WHERE id = NEW.id_person);" +
+                                                    "   SET man_salary = (SELECT capital_gain" +
+                                                    "                      FROM persons" +
+                                                    "                      WHERE id = NEW.id_relative);" +
+                                                    "   IF man_salary < wife_salary " +
+                                                    "   THEN CALL a_man_cannot_earn_more_than_his_wife;" +
+                                                    "   END IF;" +
+                                                    "END IF;" +
+                                                    "END;";
+        return marriedAndDescendantsInsertTrigger;
+    }
     private void createTriggers()
     {
-        Statement statement = this.connection.createStatement();
+        try
+        {
+            System.out.println("creating triggers");
+            Statement statement = this.connection.createStatement();
 
+            statement.execute(personsTrigger());
+            statement.execute(marriedAndDescendantsTrigger());
 
-
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void createSchema()
@@ -140,6 +204,8 @@ public class Schema
             statement.executeUpdate(createTableCarsOwnedByPeople());
             System.out.println("Table cars_owned_by_peaple was created");
 
+            createTriggers();
+
         }
         catch (SQLException e)
         {
@@ -157,6 +223,7 @@ public class Schema
             statement.execute("DROP TABLE married_and_descendants");
             statement.execute("DROP TABLE persons");
             statement.execute("DROP TABLE cars");
+//            statement.execute("DROP Trigger workclass");
         }
         catch (SQLException e)
         {

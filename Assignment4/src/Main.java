@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -65,6 +66,42 @@ public class Main
         }
     }
 
+    public static void sql(Connection connection, String sqlQuery)
+    {
+        ArrayList<String> columnNames = new ArrayList<>();
+        try
+        {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+            if (resultSet != null)
+            {
+                ResultSetMetaData columns = resultSet.getMetaData();
+                int i = 0;
+                while (i < columns.getColumnCount())
+                {
+                    i++;
+                    System.out.printf("%-25s", columns.getColumnName(i));
+                    columnNames.add(columns.getColumnName(i));
+                }
+                System.out.println();
+
+                while (resultSet.next())
+                {
+                    for (i = 0; i < columnNames.size(); i++)
+                    {
+                        System.out.printf("%-25s",resultSet.getString(columnNames.get(i)));
+                    }
+                    System.out.println();
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+            e.printStackTrace(); //TODO
+        }
+    }
+
     public static void main(String[] args)
     {
         System.out.println("Connecting to server");
@@ -104,7 +141,12 @@ public class Main
                         break;
 
                     case "sql":
-    //                    sql(s);
+                        String sqlQuery = "";
+                        for(int i = 1 ; i < parsedCommad.length ; i++)
+                        {
+                            sqlQuery = sqlQuery + parsedCommad[i] + " ";
+                        }
+                        sql(connection, sqlQuery.toLowerCase());
                         break;
 
                     case "load":
@@ -129,11 +171,11 @@ public class Main
                         throw new IOException("Invalid command");
                 }
             }
-            catch (IOException e)
+            catch (IndexOutOfBoundsException e)
             {
-                System.out.println(e.getMessage());
+                System.out.println("Not enough parameters!");
             }
-            catch (SQLException e)
+            catch (SQLException | IOException e)
             {
                 System.out.println(e.getMessage());
             }

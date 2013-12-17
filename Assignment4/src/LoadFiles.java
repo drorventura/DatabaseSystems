@@ -27,18 +27,11 @@ public class LoadFiles
         }
         catch (SQLException | FileNotFoundException e)
         {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
 
-        int j = 0;
         while ((record = cvsReader.getNextRecord()) != null)
         {
-            j++ ;
-            if(j == 1000)
-            {
-                break;
-            }
-
             try
             {
                 if (record[0].equals("?"))
@@ -115,16 +108,27 @@ public class LoadFiles
         {
             try
             {
-                statement.setInt(1,Integer.parseInt(record[0])); // car_id
-                statement.setString(2, record[1]); // car_manufacturer
-                statement.setString(3, record[2]); // car_model
-                statement.setInt(4, Integer.parseInt(record[3])); // car_year
+                if (record[0].equals("?"))
+                    statement.setNull(1, Types.INTEGER);
+                else
+                    statement.setInt(1,Integer.parseInt(record[0])); // car_id
+                if (record[1].equals("?"))
+                    statement.setNull(2, Types.VARCHAR);
+                else
+                    statement.setString(2, record[1]); // car_manufacturer
+                if (record[2].equals("?"))
+                    statement.setNull(3, Types.VARCHAR);
+                    statement.setString(3, record[2]); // car_model
+                if (record[3].equals("?"))
+                    statement.setNull(4, Types.INTEGER);
+                else
+                    statement.setInt(4, Integer.parseInt(record[3])); // car_year
 
                 statement.executeUpdate();
             }
             catch (SQLException e)
             {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -154,9 +158,19 @@ public class LoadFiles
         {
             try
             {
-                statement.setInt(1, Integer.parseInt(record[0])); // id_person
-                statement.setInt(2, Integer.parseInt(record[1])); // id_relative
-                statement.setString(3, record[2]); // relationship
+                if (record[0].equals("?"))
+                    statement.setNull(1, Types.INTEGER);
+                else
+                    statement.setInt(1, Integer.parseInt(record[0])); // id_person
+                if (record[1].equals("?"))
+                    statement.setNull(2, Types.INTEGER);
+                else
+                    statement.setInt(2, Integer.parseInt(record[1])); // id_relative
+                if (record[2].equals("?"))
+                    statement.setNull(3, Types.VARCHAR);
+                else
+                    statement.setString(3, record[2]); // relationship
+
                 statement.executeUpdate();
             }
             catch (SQLException e)
@@ -183,28 +197,41 @@ public class LoadFiles
         }
         catch(SQLException | FileNotFoundException e)
         {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
 
         while ((record = cvsReader.getNextRecord()) != null)
         {
             try
             {
-                if(Integer.parseInt(record[0]) > 1000)
+                if(Integer.parseInt(record[0]) > 1000) //TODO
                     continue;
 
-                statement.setInt(1, Integer.parseInt(record[0])); // person_id
-                statement.setInt(2, Integer.parseInt(record[1])); // car_id
-                statement.setString(3, record[2]); // color
-
-                String[] date = record[3].split("/");
-                statement.setDate(4, Date.valueOf(date[2] + "-" + date[1] + "-" + date[0])); // date_purchased
+                if (record[0].equals("?"))
+                    statement.setNull(1, Types.INTEGER);
+                else
+                    statement.setInt(1, Integer.parseInt(record[0])); // person_id
+                if (record[1].equals("?"))
+                    statement.setNull(2, Types.INTEGER);
+                else
+                    statement.setInt(2, Integer.parseInt(record[1])); // car_id
+                if (record[2].equals("?"))
+                    statement.setNull(3, Types.VARCHAR);
+                else
+                    statement.setString(3, record[2]); // color
+                if (record[3].equals("?"))
+                    statement.setNull(4, Types.DATE);
+                else
+                {
+                    String[] date = record[3].split("/");
+                    statement.setDate(4, Date.valueOf(date[2] + "-" + date[1] + "-" + date[0])); // date_purchased
+                }
 
                 statement.executeUpdate();
             }
             catch (SQLException e)
             {
-//                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
 

@@ -10,9 +10,10 @@ bin/
 
 # Configurations #
 .settings/
+.idea/
 .classpath
 .project
-.idea/
+*.iml
 
 # Input Files #
 *.csv

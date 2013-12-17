@@ -4,3 +4,14 @@
 *.jar
 *.war
 *.ear
+
+# Binary files #
+bin/
+
+# Configurations #
+.settings/
+.classpath
+.project
+
+# Input Files #
+*.csv

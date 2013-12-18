@@ -11,9 +11,9 @@ public class Query
 {
     // Number 1
     static final String REACHEST_PERSON = "SELECT id FROM persons AS P1 " +
-                                          "WHERE capital_gain > all(SELECT capital_gain " +
-                                          "                         FROM persons as P2 " +
-                                          "                         WHERE  P1.id != P2.id);";
+                                          "WHERE capital_gain >= all(SELECT capital_gain " +
+                                          "                          FROM persons AS P2 " +
+                                          "                          WHERE  P1.id != P2.id);";
 
     // Number 2
     static final String MAX_CHILDREN =  "SELECT NOC1.id_person " +
@@ -29,12 +29,11 @@ public class Query
                                         "                           WHERE NOC1.id_person != NOC2.id_person);";
 
     // Number 3
-    static final String CHILD_AVG_OF_WOMEN =    "SELECT native_country, avg(num_of_children)" +
-                                                "FROM (SELECT native_country, mother, count(child) AS num_of_children" +
-                                                "      FROM(SELECT persons.id AS mother, relations.id_relative AS child, native_country" +
-                                                "           FROM relations JOIN persons ON relations.id_person = person.id " +
-                                                "           WHERE relations.relationship = 'child' AND persons.sex = 'Female') AS T1" +
-                                                "      GROUP BY native_country, mother) AS T2" +
+    static final String CHILD_AVG_OF_WOMEN =    "SELECT native_country, avg(num_of_children) AS average " +
+                                                "FROM (SELECT native_country, mother, count(*) AS num_of_children" +
+                                                "      FROM(SELECT P.id AS mother, R.id_relative AS child, P.native_country" +
+                                                "           FROM relations R JOIN persons P ON R.relationship = 'child' AND R.id_person = P.id AND P.sex = 'Female') x" +
+                                                "      GROUP BY native_country, mother) y" +
                                                 "GROUP BY native_country;";
 
     // Number 4

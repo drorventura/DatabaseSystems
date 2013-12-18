@@ -12,6 +12,7 @@ public class Main
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:1234/dbs141_user5";
+    // mysqlsrv1.cs.bgu.ac.il:3306/dbs141_user5
 
     //  Database credentials
     static final String USER = "dbs141_user5";

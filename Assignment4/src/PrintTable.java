@@ -2,11 +2,8 @@ import java.sql.*;
 import java.util.Date;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dror
- * Date: 16/12/13
- * Time: 21:50
- * To change this template use File | Settings | File Templates.
+ * Dror Ventura
+ * Shay Zilberman
  */
 public class PrintTable
 {

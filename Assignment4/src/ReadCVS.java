@@ -3,11 +3,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dror
- * Date: 16/12/13
- * Time: 16:23
- * To change this template use File | Settings | File Templates.
+ * Dror Ventura
+ * Shay Zilberman
  */
 public class ReadCVS
 {

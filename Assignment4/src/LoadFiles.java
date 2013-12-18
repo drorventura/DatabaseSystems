@@ -2,11 +2,8 @@ import java.io.FileNotFoundException;
 import java.sql.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dror
- * Date: 17/12/13
- * Time: 01:16
- * To change this template use File | Settings | File Templates.
+ * Dror Ventura
+ * Shay Zilberman
  */
 public class LoadFiles
 {
@@ -204,8 +201,8 @@ public class LoadFiles
         {
             try
             {
-                if(Integer.parseInt(record[0]) > 1000) //TODO
-                    continue;
+//                if(Integer.parseInt(record[0]) > 1000)
+//                    continue;
 
                 if (record[0].equals("?"))
                     statement.setNull(1, Types.INTEGER);

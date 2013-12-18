@@ -3,11 +3,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dror
- * Date: 16/12/13
- * Time: 20:46
- * To change this template use File | Settings | File Templates.
+ * Dror Ventura
+ * Shay Zilberman
  */
 public class Schema
 {

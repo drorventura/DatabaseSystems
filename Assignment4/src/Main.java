@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Dror
- * Date: 16/12/13
- * Time: 14:59
- * To change this template use File | Settings | File Templates.
+ * Dror Ventura
+ * Shay Zilberman
  */
 public class Main
 {
@@ -65,6 +62,25 @@ public class Main
                 throw new IOException("No such table " + tableNameInput);
         }
     }
+    public static String getReport(int num)
+    {
+        String report = null;
+        switch (num)
+        {
+            case 1:
+                report =    "SELECT id_person, id_relative, relationship, age " +
+                            "FROM relations INNER JOIN persons ON id_relative = id " +
+                            "WHERE Relationship = 'child' " +
+                            "ORDER BY id_person ASC, age DESC;";
+                break;
+            case 2:
+                report =    "SELECT person_id, car_id, date_purchased " +
+                            "FROM cars_persons " +
+                            "ORDER BY person_id ASC, date_purchased ASC";
+                break;
+        }
+        return report;
+    }
 
     public static void sql(Connection connection, String sqlQuery)
     {
@@ -98,7 +114,7 @@ public class Main
         catch (SQLException e)
         {
             System.out.println(e.getMessage());
-            e.printStackTrace(); //TODO
+            e.printStackTrace();
         }
     }
 
@@ -156,7 +172,8 @@ public class Main
                         break;
 
                     case "report":
-//                        report(s.nextInt());
+
+                        sql(connection, getReport(Integer.parseInt(parsedCommad[1])));
                         break;
 
                     case "query":

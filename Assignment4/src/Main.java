@@ -160,7 +160,7 @@ public class Main
                         break;
 
                     case "query":
-//                        query(s.nextInt());
+                        Query.query(connection, Integer.parseInt(parsedCommad[1]));
                         break;
 
                     case "quit":

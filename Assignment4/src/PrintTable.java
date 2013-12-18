@@ -9,17 +9,17 @@ public class PrintTable
 {
     private Connection connection;
     private String queryForPersons;
-    private String queryForMarriedAndDesendets;
+    private String queryForRelations;
     private String queryForCars;
-    private String queryForCarsOwned;
+    private String queryForCarsPersons;
 
     public PrintTable(Connection connection)
     {
         this.connection = connection;
         this.queryForPersons = "SELECT * FROM persons";
-        this.queryForMarriedAndDesendets = "SELECT * FROM relations";
+        this.queryForRelations = "SELECT * FROM relations";
         this.queryForCars = "SELECT * FROM cars";
-        this.queryForCarsOwned = "SELECT * from cars_persons";
+        this.queryForCarsPersons = "SELECT * from cars_persons";
     }
 
     public void printSchema(String table) throws SQLException
@@ -33,16 +33,13 @@ public class PrintTable
                 printPersons(resultSet);
                 break;
             case "relations":
-                resultSet = statement.executeQuery(this.queryForMarriedAndDesendets);
-                printMarried(resultSet);
+                Main.sql(connection, this.queryForRelations);
                 break;
             case "cars":
-                resultSet = statement.executeQuery(this.queryForCars);
-                printCars(resultSet);
+                Main.sql(connection, this.queryForCars);
                 break;
             case "cars_persons":
-                resultSet = statement.executeQuery(this.queryForCarsOwned);
-                printCarsOwned(resultSet);
+                Main.sql(connection, this.queryForCarsPersons);
                 break;
             default:
                 throw new SQLException("No such table in database");
@@ -78,68 +75,68 @@ public class PrintTable
         }
     }
 
-    public void printMarried(ResultSet resultSet) throws SQLException
-    {
-        System.out.printf("%-10s %-10s %s", "Id_person", "Id_relative", "Relationship");
-        System.out.println();
+//    public void printMarried(ResultSet resultSet) throws SQLException
+//    {
+//        System.out.printf("%-10s %-10s %s", "Id_person", "Id_relative", "Relationship");
+//        System.out.println();
+//
+//        while(resultSet.next())
+//        {
+//            //Retrieve by column name
+//            int id_person  = resultSet.getInt("id_person");
+//            int id_relative = resultSet.getInt("id_relative");
+//            String relationship = resultSet.getString("Relationship");
+//
+//            //Display values
+//            System.out.printf("%-12s" , id_person);
+//            System.out.printf("%-12s" , id_relative);
+//            System.out.printf("%s" , relationship);
+//            System.out.println();
+//        }
+//    }
 
-        while(resultSet.next())
-        {
-            //Retrieve by column name
-            int id_person  = resultSet.getInt("id_person");
-            int id_relative = resultSet.getInt("id_relative");
-            String relationship = resultSet.getString("Relationship");
-
-            //Display values
-            System.out.printf("%-12s" , id_person);
-            System.out.printf("%-12s" , id_relative);
-            System.out.printf("%s" , relationship);
-            System.out.println();
-        }
-    }
-
-    public void printCars(ResultSet resultSet) throws SQLException
-    {
-            System.out.printf("%-10s %-20s %-15s %s", "Car_Id", "Car_manufacturer", "Car_model", "Car_Year");
-        System.out.println();
-
-        while(resultSet.next())
-        {
-            //Retrieve by column name
-            int carID  = resultSet.getInt("car_id");
-            String carManufacturer = resultSet.getString("car_manufacturer");
-            String carModel = resultSet.getString("car_model");
-            int carYear = resultSet.getInt("car_year");
-
-
-            //Display values
-            System.out.printf("%-15s" , carID);
-            System.out.printf("%-18s" , carManufacturer);
-            System.out.printf("%-15s" , carModel);
-            System.out.printf("%s" , carYear);
-            System.out.println();
-        }
-    }
-
-    public void printCarsOwned(ResultSet resultSet) throws SQLException
-    {
-        System.out.printf("%-13s %-10s %-9s %s", "Person_Id", "Car_Id", "Color", "Date_purchased");
-        System.out.println();
-
-        while(resultSet.next())
-        {
-            //Retrieve by column name
-            int personID  = resultSet.getInt("person_id");
-            int carID = resultSet.getInt("car_id");
-            String color = resultSet.getString("color");
-            Date datePurchased = resultSet.getDate("date_purchased");
-
-            //Display values
-            System.out.printf("%-15s" , personID);
-            System.out.printf("%-10s" , carID);
-            System.out.printf("%-10s" , color);
-            System.out.printf("%s" , datePurchased.toString());
-            System.out.println("");
-        }
-    }
+//    public void printCars(ResultSet resultSet) throws SQLException
+//    {
+//            System.out.printf("%-10s %-20s %-15s %s", "Car_Id", "Car_manufacturer", "Car_model", "Car_Year");
+//        System.out.println();
+//
+//        while(resultSet.next())
+//        {
+//            //Retrieve by column name
+//            int carID  = resultSet.getInt("car_id");
+//            String carManufacturer = resultSet.getString("car_manufacturer");
+//            String carModel = resultSet.getString("car_model");
+//            int carYear = resultSet.getInt("car_year");
+//
+//
+//            //Display values
+//            System.out.printf("%-15s" , carID);
+//            System.out.printf("%-18s" , carManufacturer);
+//            System.out.printf("%-15s" , carModel);
+//            System.out.printf("%s" , carYear);
+//            System.out.println();
+//        }
+//    }
+//
+//    public void printCarsOwned(ResultSet resultSet) throws SQLException
+//    {
+//        System.out.printf("%-13s %-10s %-9s %s", "Person_Id", "Car_Id", "Color", "Date_purchased");
+//        System.out.println();
+//
+//        while(resultSet.next())
+//        {
+//            //Retrieve by column name
+//            int personID  = resultSet.getInt("person_id");
+//            int carID = resultSet.getInt("car_id");
+//            String color = resultSet.getString("color");
+//            Date datePurchased = resultSet.getDate("date_purchased");
+//
+//            //Display values
+//            System.out.printf("%-15s" , personID);
+//            System.out.printf("%-10s" , carID);
+//            System.out.printf("%-10s" , color);
+//            System.out.printf("%s" , datePurchased.toString());
+//            System.out.println("");
+//        }
+//    }
 }
